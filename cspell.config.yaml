@@ -1,0 +1,15 @@
+version: "0.2"
+ignorePaths:
+  - .editorconfig
+  - .gitignore
+  - convert-utf8bom-to-utf8.bat
+  - convert-utf8bom-to-utf8.ps1
+dictionaryDefinitions: []
+dictionaries: []
+words:
+  - postorder
+  - preorder
+  - winget
+  - xunit
+ignoreWords: []
+import: []

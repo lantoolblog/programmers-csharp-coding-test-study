@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <!-- Mono 6.10 대응을 위해 C# 7.0으로 고정 -->
+    <LangVersion>7</LangVersion>
+    <!-- C# 7.0에서는 의미 없으므로 주석 처리하거나 제거 -->
+    <!-- <ImplicitUsings>enable</ImplicitUsings> -->
+    <!-- <Nullable>enable</Nullable> -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Programmers.Solutions.Tests"/>
+  </ItemGroup>
+
+</Project>

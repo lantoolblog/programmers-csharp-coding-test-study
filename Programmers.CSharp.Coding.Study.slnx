@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Programmers.Solutions.Modern\Programmers.Solutions.Modern.csproj" Type="C#" />
+  <Project Path="Programmers.Solutions.Tests/Programmers.Solutions.Tests.csproj" />
+  <Project Path="Programmers.Solutions/Programmers.Solutions.csproj" />
+</Solution>

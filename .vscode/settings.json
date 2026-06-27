@@ -1,0 +1,11 @@
+{
+    "dotnet.defaultSolution": "Programmers.CSharp.Coding.Study.slnx",
+    "debug.console.collapseIdenticalLines": false,
+    "terminal.integrated.defaultProfile.windows": "Command Prompt",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "[csharp]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "ms-dotnettools.csharp"
+    }
+}
