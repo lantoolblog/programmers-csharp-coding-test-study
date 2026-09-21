@@ -29,37 +29,45 @@ programmers-csharp-coding-test-study/
   ├── .editorconfig              # 코드 스타일 설정
   ├── .gitignore                 # Git 제외 파일
   ├── cspell.config.yaml         # 맞춤법 검사 설정
+  ├── global.json                # dotnet test 러너 지정 (MTP)
   ├── NuGet.Config               # NuGet 패키지 소스
+  ├── Programmers.CSharp.Coding.Study.slnx  # 솔루션 파일 (XML 기반 신규 포맷)
   ├── README.md                  # 프로젝트 설명
   │
   ├── 📂 .vscode/                    # VS Code 작업 공간 설정
   │   ├── extensions.json            # 권장 확장 프로그램
   │   └── settings.json              # 워크스페이스 설정
   │
-  ├── 📦 Programmers.Solutions/      # 프로그래머스 제출용 솔루션 프로젝트
+  ├── 📦 Programmers.Solutions/      # 프로그래머스 제출용 솔루션 프로젝트 (C# 7.0)
   │   ├── Programmers.Solutions.csproj
   │   └── Lv03/
-  │       └── Exam42892.cs           # 레벨 3 문제
+  │       ├── Exam42892.cs           # 레벨 3 문제
+  │       └── Exam92343.cs           # 레벨 3 문제
   │
   ├── 📦 Programmers.Solutions.Modern/ # 최신 C# 문법 활용한 솔루션 프로젝트
   │   ├── Programmers.Solutions.Modern.csproj
   │   ├── Practice/
-  │   │   └── Practice000001.cs      # 개인 연습문제
+  │   │   ├── Prac000001.cs          # 개인 연습문제
+  │   │   └── Prac000002.cs          # 개인 연습문제
   │   │
   │   └── Lv03/
   │       ├── Exam42892.cs           # 레벨 3 문제
-  │       └── Exam42892A.cs          # 레벨 3 문제 - 재귀를 루프로 변환
+  │       ├── Exam42892A.cs          # 레벨 3 문제 - 재귀를 루프로 변환
+  │       └── Exam92343.cs           # 레벨 3 문제
   │
-  └── 🧪 Programmers.Solutions.Tests/ # 테스트 프로젝트
+  └── 🧪 Programmers.Solutions.Tests/ # 테스트 프로젝트 (MTP 실행 방식)
       ├── Programmers.Solutions.Tests.csproj
+      ├── Common/
+      │   └── LimitedTheoryAttribute.cs # 타임아웃(기본 10초) 적용 Theory 어트리뷰트
+      │
       ├── Practice/
-      │   └── Practice000001Tests.cs # 개인 연습문제 테스트
+      │   ├── Prac000001Tests.cs     # 개인 연습문제 테스트
+      │   └── Prac000002Tests.cs     # 개인 연습문제 테스트
       │
       └── Lv03/
-          └── Exam42892Tests.cs      # 레벨 3 테스트
+          ├── Exam42892Tests.cs      # 레벨 3 테스트
+          └── Exam92343Tests.cs      # 레벨 3 테스트
 ```
-
-
 
 ### 프로젝트별 C# 버전 요약
 
@@ -69,16 +77,14 @@ programmers-csharp-coding-test-study/
 | Programmers.Solutions.Modern | latest (SDK 기준 14) | 최신 문법 연습     |
 | Programmers.Solutions.Tests  | latest (SDK 기준 14) | 테스트 편의성      |
 
-
-
 ### 문제 풀이 규칙
 
 * 문제 파일명: `Exam{문제번호}.cs` (예: `Exam42892.cs`, 문제번호 = 프로그래머스 문제 ID)
 * 테스트 파일명: `Exam{문제번호}Tests.cs`
 * 레벨별 폴더 구조: `Lv01/`, `Lv02/`, `Lv03/`, `Lv04/`, `Lv05/`
 * 동일 문제 변형/최적화 버전은 접미사 추가: `Exam42892A.cs` 등
-
-
+* 프로그래머스 문제가 아닌 개인 연습문제는 `Practice/` 폴더에 `Prac{일련번호 6자리}.cs`
+  (예: `Prac000001.cs`, 테스트는 `Prac000001Tests.cs`)
 
 ## 개발 도구
 
@@ -137,8 +143,6 @@ C:\>
 > * C# Dev Kit
 >   * https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit
 
-
-
 ### Rider
 
 * https://www.jetbrains.com/ko-kr/rider/
@@ -152,8 +156,6 @@ C:\>
 
 테스트 프로젝트를 만들 때도, MSBuild나 xUnit 프로젝트로 별도로 만들 때, 그냥 디펜던시가 추가되고,
 특별한 라이브러리를 추가할 일도 없을 것 같아서, 따로 디펜던시 관리 관련해서는 따로 할 일이 없을 것 같다.
-
-
 
 ### 라이브러리 업데이트
 
@@ -197,6 +199,24 @@ Java와는 다르게 src/test에다 한 프로젝트에 테스트 코드를 만�
 
 C#에서 가장 보편적으로 사용되는 테스트 프레임워크인 xUnit 기반 프로젝트로 만들기로 함. (Java의 TestNG와 유사)
 
+### MTP(Microsoft.Testing.Platform) 방식
+
+기존 VSTest 방식(`Microsoft.NET.Test.Sdk` + `xunit.runner.visualstudio`) 대신,
+테스트 프로젝트 자체가 실행 파일이 되는 **MTP** 방식을 사용한다. (xUnit v3 권장 방식)
+
+* 테스트 프로젝트([Programmers.Solutions.Tests.csproj](Programmers.Solutions.Tests/Programmers.Solutions.Tests.csproj)): `<OutputType>Exe</OutputType>` + `xunit.v3` 패키지만 참조
+* 루트의 [global.json](global.json)에서 `dotnet test`가 MTP 러너를 쓰도록 지정
+
+  ```json
+  {
+    "test": {
+      "runner": "Microsoft.Testing.Platform"
+    }
+  }
+  ```
+
+이 설정 때문에 `dotnet test`의 필터 옵션이 VSTest 시절과 달라진다. ([테스트 실행](#테스트-실행) 참고)
+
 
 
 ## 코드 포맷터
@@ -207,28 +227,59 @@ VSCode와 Rider 모두 .editorconfig를 인식하므로 해당 파일을 추가�
 
 
 
+
+
 ## 실행 방법
 
 ### 테스트 실행
+
+이 프로젝트는 VSTest가 아닌 **MTP(Microsoft.Testing.Platform)** 방식으로 테스트를 실행한다.
+([단위 테스트 프레임워크](#단위-테스트-프레임워크) 참고)
 
 ```bash
 # 전체 테스트 실행
 dotnet test
 
-# 특정 레벨 테스트 (네임스페이스 패턴)
-dotnet test --filter "FullyQualifiedName~Lv03"
+# 실행하지 않고 테스트 목록만 확인
+dotnet test --list-tests
+
+# 특정 레벨 테스트 (네임스페이스)
+dotnet test --filter-namespace "Programmers.Solutions.Tests.Lv03"
 
 # 특정 테스트 클래스
-dotnet test --filter "FullyQualifiedName=Programmers.Solutions.Tests.Lv03.Exam42892Tests"
+dotnet test --filter-class "Programmers.Solutions.Tests.Lv03.Exam42892Tests"
 
 # 특정 테스트 메서드
-dotnet test --filter "FullyQualifiedName=Programmers.Solutions.Tests.Lv03.Exam42892Tests.Should_Solve_SampleCase"
+dotnet test --filter-method "Programmers.Solutions.Tests.Lv03.Exam42892Tests.Solution_Modern_Test"
 
-# DisplayName 기반 실행 (xUnit Fact/Theory DisplayName 사용 시)
-dotnet test --filter "DisplayName~SampleCase"
+# 와일드카드('*'는 앞/뒤에만 사용 가능)
+dotnet test --filter-method "*Modern*"
+
+# 제외 필터 (--filter-not-class / --filter-not-method / --filter-not-namespace)
+dotnet test --filter-not-class "*Practice*"
+
+# 특성(Trait) 기준 실행
+dotnet test --filter-trait "Category=Slow"
+
+# 쿼리 필터 언어: /어셈블리/네임스페이스/클래스/메서드
+dotnet test --filter-query "/*/*/Exam42892Tests/*"
+
+# 특정 프로젝트만 실행
+dotnet test --project Programmers.Solutions.Tests/Programmers.Solutions.Tests.csproj
 ```
 
-
+> 💡 예전 VSTest 스타일 필터(`dotnet test --filter "FullyQualifiedName~Lv03"`)도 호환용으로 동작하지만,
+> MTP 환경에서는 위의 `--filter-*` 옵션을 쓰는 것이 명확하다.
+>
+> 💡 필터 옵션은 `dotnet test` 뒤에 바로 써도 테스트 앱으로 전달된다.
+> 옵션 이름이 SDK 옵션과 충돌할 때는 `dotnet test -- --filter-class "..."` 처럼 `--` 뒤에 붙이면 된다.
+>
+> 💡 xUnit 자체 실행 파일을 직접 실행하면 네이티브 러너의 옵션(`-class`, `-method`, `-list methods` 등)을 쓸 수 있고,
+> 전체 옵션은 아래 명령으로 확인할 수 있다.
+>
+> ```bash
+> ./Programmers.Solutions.Tests/bin/Debug/net10.0/Programmers.Solutions.Tests.exe --help
+> ```
 
 ### 솔루션 빌드
 
@@ -252,10 +303,11 @@ dotnet build
 ### 테스트 실행 안 될 때
 
 - 테스트 프로젝트만 빌드: `dotnet build Programmers.Solutions.Tests/`
-- 필터 오타 확인 (대소문자 정확)
+- 필터 오타 확인 (대소문자 정확) — 먼저 `dotnet test --list-tests`로 실제 테스트 이름 확인
+- 필터에 걸리는 테스트가 없으면 종료 코드 `5`(zero tests ran)가 나온다
 - 테스트가 `[Fact]` / `[Theory]` 속성 달렸는지 확인
-- 이전 실패한 결과 캐시 방지: `dotnet test --no-build`
-- 멀티 대상 사용 시 대상 명시: `dotnet test -f net8.0`
+- 빌드를 건너뛰고 실행: `dotnet test --no-build`
+- 멀티 대상 사용 시 대상 명시: `dotnet test -f net10.0`
 
 ### .NET SDK 업그레이드 시 문제
 
